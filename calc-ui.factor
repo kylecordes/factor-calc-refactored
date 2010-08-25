@@ -60,7 +60,6 @@ TUPLE: calculator < model x y op valid ;
 
 
 SYMBOL: calc
-<calculator> calc set-global
 
 : [C] ( -- button )
     "C" calc get-global '[ drop _ reset ] <border-button> ;
@@ -105,6 +104,7 @@ SYMBOL: calc
     swap output>array [ 1 track-add ] each ; inline
 
 : calc-ui ( -- )
+    <calculator> calc set-global
     <col> [
         <display>
         [     [C]     [±]     [÷]    [×] ] <row>

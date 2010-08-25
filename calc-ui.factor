@@ -57,42 +57,38 @@ TUPLE: calculator < model x y op valid ;
     [ t >>valid set-model ] if ;
 
 
+: [C] ( calc -- button )
+    "C" swap '[ drop _ reset ] <border-button> ;
 
+: [±] ( calc -- button )
+    "±" swap '[ drop _ negate ] <border-button> ;
 
-SYMBOL: calc
+: [+] ( calc -- button )
+    "+" swap '[ drop _ [ + ] set-op ] <border-button> ;
 
-: [C] ( -- button )
-    "C" calc get-global '[ drop _ reset ] <border-button> ;
+: [-] ( calc -- button )
+    "-" swap '[ drop _ [ - ] set-op ] <border-button> ;
 
-: [±] ( -- button )
-    "±" calc get-global '[ drop _ negate ] <border-button> ;
+: [×] ( calc -- button )
+    "×" swap '[ drop _ [ * ] set-op ] <border-button> ;
 
-: [+] ( -- button )
-    "+" calc get-global '[ drop _ [ + ] set-op ] <border-button> ;
+: [÷] ( calc -- button )
+    "÷" swap '[ drop _ [ / ] set-op ] <border-button> ;
 
-: [-] ( -- button )
-    "-" calc get-global '[ drop _ [ - ] set-op ] <border-button> ;
+: [=] ( calc -- button )
+    "=" swap '[ drop _ solve ] <border-button> ;
 
-: [×] ( -- button )
-    "×" calc get-global '[ drop _ [ * ] set-op ] <border-button> ;
+: [.] ( calc -- button )
+    "." swap '[ drop _ decimal ] <border-button> ;
 
-: [÷] ( -- button )
-    "÷" calc get-global '[ drop _ [ / ] set-op ] <border-button> ;
-
-: [=] ( -- button )
-    "=" calc get-global '[ drop _ solve ] <border-button> ;
-
-: [.] ( -- button )
-    "." calc get-global '[ drop _ decimal ] <border-button> ;
-
-: [#] ( n -- button )
-    dup calc get-global '[ drop _ _ digit ] <border-button> ;
+: [#] ( calc n -- button )
+    dup rot '[ drop _ _ digit ] <border-button> ;
 
 : [_] ( -- label )
     "" <label> ;
 
-: <display> ( -- label )
-    calc get-global <label-control> { 5 5 } <border>
+: <display> ( calc -- label )
+    <label-control> { 5 5 } <border>
         { 1 1/2 } >>align
         COLOR: gray <solid> >>boundary ;
 
@@ -103,15 +99,17 @@ SYMBOL: calc
     horizontal <track> 1 >>fill { 5 5 } >>gap
     swap output>array [ 1 track-add ] each ; inline
 
+SYMBOL: calc
+
 : calc-ui ( -- )
     <calculator> calc set-global
     <col> [
-        <display>
-        [     [C]     [±]     [÷]    [×] ] <row>
-        [ "7" [#] "8" [#] "9" [#]    [-] ] <row>
-        [ "4" [#] "5" [#] "6" [#]    [+] ] <row>
-        [ "1" [#] "2" [#] "3" [#]    [=] ] <row>
-        [ "0" [#]     [.]     [_]    [_] ] <row>
+        calc get-global <display>
+        [ calc get-global    [C]   calc get-global  [±]  calc get-global   [÷] calc get-global   [×] ] <row>
+        [ calc get-global "7" [#] calc get-global "8" [#] calc get-global "9" [#]  calc get-global  [-] ] <row>
+        [ calc get-global "4" [#] calc get-global "5" [#] calc get-global "6" [#]  calc get-global  [+] ] <row>
+        [ calc get-global "1" [#] calc get-global "2" [#] calc get-global "3" [#]  calc get-global  [=] ] <row>
+        [ calc get-global "0" [#] calc get-global    [.]     [_]    [_] ] <row>
     ] output>array [ 1 track-add ] each
     { 10 10 } <border> "Calculator" open-window ;
 

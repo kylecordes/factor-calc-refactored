@@ -102,14 +102,14 @@ TUPLE: calculator < model x y op valid ;
 SYMBOL: calc
 
 : calc-ui ( -- )
-    <calculator> calc set-global
+    <calculator> calc set
     <col> [
-        calc get-global <display>
-        [ calc get-global    [C]   calc get-global  [±]  calc get-global   [÷] calc get-global   [×] ] <row>
-        [ calc get-global "7" [#] calc get-global "8" [#] calc get-global "9" [#]  calc get-global  [-] ] <row>
-        [ calc get-global "4" [#] calc get-global "5" [#] calc get-global "6" [#]  calc get-global  [+] ] <row>
-        [ calc get-global "1" [#] calc get-global "2" [#] calc get-global "3" [#]  calc get-global  [=] ] <row>
-        [ calc get-global "0" [#] calc get-global    [.]     [_]    [_] ] <row>
+        calc get <display>
+        [ calc get     [C] calc get     [±] calc get     [÷] calc get  [×] ] <row>
+        [ calc get "7" [#] calc get "8" [#] calc get "9" [#] calc get  [-] ] <row>
+        [ calc get "4" [#] calc get "5" [#] calc get "6" [#] calc get  [+] ] <row>
+        [ calc get "1" [#] calc get "2" [#] calc get "3" [#] calc get  [=] ] <row>
+        [ calc get "0" [#] calc get     [.]              [_]           [_] ] <row>
     ] output>array [ 1 track-add ] each
     { 10 10 } <border> "Calculator" open-window ;
 

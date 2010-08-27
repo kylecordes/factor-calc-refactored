@@ -1,7 +1,7 @@
 ! Copyright (C) 2010 John Benediktsson
 ! See http://factorcode.org/license.txt for BSD license
 
-USING: accessors colors.constants combinators.smart kernel fry
+USING: accessors colors.constants combinators.smart kernel fry combinators
 math math.parser models namespaces sequences ui ui.gadgets
 ui.gadgets.borders ui.gadgets.buttons ui.gadgets.labels
 ui.gadgets.tracks ui.pens.solid ;
@@ -84,8 +84,8 @@ TUPLE: calculator < model x y op valid ;
 : [#] ( calc n -- button )
     dup rot '[ drop _ _ digit ] <border-button> ;
 
-: [_] ( -- label )
-    "" <label> ;
+: [_] ( calc -- label )
+    drop "" <label> ;
 
 : <display> ( calc -- label )
     <label-control> { 5 5 } <border>
@@ -95,9 +95,9 @@ TUPLE: calculator < model x y op valid ;
 : <col> ( -- track )
     vertical <track> 1 >>fill { 5 5 } >>gap ;
 
-: <row> ( quot -- track )
+: <row> ( calc quot -- track )
     horizontal <track> 1 >>fill { 5 5 } >>gap
-    swap output>array [ 1 track-add ] each ; inline
+    -rot output>array [ 1 track-add ] each ; inline
 
 SYMBOL: calc
 
@@ -105,11 +105,11 @@ SYMBOL: calc
     <calculator> calc set
     <col> [
         calc get <display>
-        [ calc get     [C] calc get     [±] calc get     [÷] calc get  [×] ] <row>
-        [ calc get "7" [#] calc get "8" [#] calc get "9" [#] calc get  [-] ] <row>
-        [ calc get "4" [#] calc get "5" [#] calc get "6" [#] calc get  [+] ] <row>
-        [ calc get "1" [#] calc get "2" [#] calc get "3" [#] calc get  [=] ] <row>
-        [ calc get "0" [#] calc get     [.]              [_]           [_] ] <row>
+        calc get [ { [     [C] ] [     [±] ] [     [÷] ] [ [×] ] } cleave ] <row>
+        calc get [ { [ "7" [#] ] [ "8" [#] ] [ "9" [#] ] [ [-] ] } cleave ] <row>
+        calc get [ { [ "4" [#] ] [ "5" [#] ] [ "6" [#] ] [ [+] ] } cleave ] <row>
+        calc get [ { [ "1" [#] ] [ "2" [#] ] [ "3" [#] ] [ [=] ] } cleave ] <row>
+        calc get [ { [ "0" [#] ] [     [.] ] [     [_] ] [ [_] ] } cleave ] <row>
     ] output>array [ 1 track-add ] each
     { 10 10 } <border> "Calculator" open-window ;
 

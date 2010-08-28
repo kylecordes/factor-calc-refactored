@@ -1,7 +1,9 @@
-! Copyright (C) 2010 John Benediktsson
+! Original code Copyright (C) 2010 John Benediktsson
+! Various changes Copyright (C) 2010 Kyle Cordes
 ! See http://factorcode.org/license.txt for BSD license
 
-USING: accessors colors.constants combinators.smart kernel fry combinators
+USING: accessors colors.constants combinators.smart kernel
+fry combinators quotations make
 math math.parser models namespaces sequences ui ui.gadgets
 ui.gadgets.borders ui.gadgets.buttons ui.gadgets.labels
 ui.gadgets.tracks ui.pens.solid ;
@@ -95,22 +97,24 @@ TUPLE: calculator < model x y op valid ;
 : <col> ( -- track )
     vertical <track> 1 >>fill { 5 5 } >>gap ;
 
-: <row> ( calc quot -- track )
+: <row> ( calc button-array -- track )
+    [ call( calc -- button ) ] with map
     horizontal <track> 1 >>fill { 5 5 } >>gap
-    -rot output>array [ 1 track-add ] each ; inline
-
-SYMBOL: calc
+    swap
+    [ 1 track-add ] each ; inline
 
 : calc-ui ( -- )
-    <calculator> calc set
     <col> [
-        calc get <display>
-        calc get [ { [     [C] ] [     [±] ] [     [÷] ] [ [×] ] } cleave ] <row>
-        calc get [ { [ "7" [#] ] [ "8" [#] ] [ "9" [#] ] [ [-] ] } cleave ] <row>
-        calc get [ { [ "4" [#] ] [ "5" [#] ] [ "6" [#] ] [ [+] ] } cleave ] <row>
-        calc get [ { [ "1" [#] ] [ "2" [#] ] [ "3" [#] ] [ [=] ] } cleave ] <row>
-        calc get [ { [ "0" [#] ] [     [.] ] [     [_] ] [ [_] ] } cleave ] <row>
-    ] output>array [ 1 track-add ] each
+        <calculator>
+        [ <display> , ] keep
+        [ { [     [C] ] [     [±] ] [     [÷] ] [ [×] ] } <row> , ] keep
+        [ { [ "7" [#] ] [ "8" [#] ] [ "9" [#] ] [ [-] ] } <row> , ] keep
+        [ { [ "4" [#] ] [ "5" [#] ] [ "6" [#] ] [ [+] ] } <row> , ] keep
+        [ { [ "1" [#] ] [ "2" [#] ] [ "3" [#] ] [ [=] ] } <row> , ] keep
+        [ { [ "0" [#] ] [     [.] ] [     [_] ] [ [_] ] } <row> , ] keep
+        drop
+    ] { } make
+    [ 1 track-add ] each
     { 10 10 } <border> "Calculator" open-window ;
 
 MAIN: calc-ui
